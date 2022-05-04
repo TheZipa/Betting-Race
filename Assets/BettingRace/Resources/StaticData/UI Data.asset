@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6d7a16bdde42b0a872d63a0cf80a4f, type: 3}
+  m_Name: UI Data
+  m_EditorClassIdentifier: 
+  RootUIPrefab: {fileID: 5683002247851552336, guid: db3ea42bd1ccc437e9d3d59c9f0580d0, type: 3}
+  SelectCarElement: {fileID: 3332277291536437901, guid: 323a9d34c5b0c49c59c4bc1b2a394de4, type: 3}
+  FinishedCardElement: {fileID: 1642248928488621195, guid: 12b2218ce4376449c88950430a569a48, type: 3}
+  CarProgressSlider: {fileID: 4764772494773315340, guid: aff2155884aee47cd8dd9bd2f750767f, type: 3}
+  CarSelectColor: {r: 1, g: 0.7636688, b: 0.3066038, a: 1}
