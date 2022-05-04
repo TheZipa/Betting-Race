@@ -17,7 +17,7 @@ namespace BettingRace.Code.Infrastructure.StateMachine
         {
             _states = new Dictionary<Type, IExitableState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
+                [typeof(BootstrapState)] = new BootstrapState(this),
                 [typeof(LoadProgressState)] = new LoadProgressState(this,
                         AllServices.Container.Single<IPersistentProgressService>(), 
                         AllServices.Container.Single<ISaveLoadService>()),

@@ -9,7 +9,8 @@ using BettingRace.Code.Services.StaticData;
 using BettingRace.Code.UI;
 using BettingRace.Code.UI.Bet;
 using BettingRace.Code.UI.FinishRace;
-using BettingRace.Code.UI.SelectCarLayout;
+using BettingRace.Code.UI.SelectHorseLayout;
+using BettingRace.Code.UI.StartRace;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -18,15 +19,16 @@ namespace BettingRace.Code.Services.Factories
 {
     public class UIFactory : IUIFactory
     {
-        public SelectCarLayoutGroup SelectCarLayoutGroup { get; private set; }
+        public SelectHorseLayoutGroup SelectHorseLayoutGroup { get; private set; }
         public StartRacePanel StartRacePanel { get; private set; }
+        public StartRaceCountdown StartRaceCountdown { get; private set; }
         public IBetModifier BetModifier { get; private set; }
         public BetPanel BetPanel { get; private set; }
         public ResetBalanceLabel ResetBalanceLabel { get; private set; }
         public FinishRacePanel FinishRacePanel { get; private set; }
-        public FinishCarLayoutGroup FinishedCarList { get; private set; }
+        public FinishHorseLayoutGroup FinishedHorseList { get; private set; }
         public IBetResultCalculator BetResultCalculator { get; private set; }
-        public RaceProgressSliderGroup CarProgressSliders { get; private set; }
+        public RaceProgressSliderGroup HorseProgressSliders { get; private set; }
 
         public List<ISavedProgress> ProgressUsers { get; } = new List<ISavedProgress>();
 
@@ -40,23 +42,29 @@ namespace BettingRace.Code.Services.Factories
             BetStaticData betData = _staticData.GetBetData();
             GameObject rootUI = Object.Instantiate(uiData.RootUIPrefab);
             
-            InitializeSelectCarLayoutGroup(rootUI, uiData.SelectCarElement ,uiData.CarSelectColor);
+            InitializeStartRaceComponents(rootUI);
+            InitializeSelectHorseLayoutGroup(rootUI, uiData.SelectHorseElement ,uiData.SelectColor);
             InitializeBetPanel(rootUI, betData);
-            InitializeFinishRacePanel(rootUI, uiData.FinishedCardElement, betData, uiData.CarSelectColor);
-            InitializeRaceProgressSliders(rootUI, uiData.CarProgressSlider);
+            InitializeFinishRacePanel(rootUI, uiData.FinishedHorseElement, betData, uiData.SelectColor);
+            InitializeRaceProgressSliders(rootUI, uiData.HorseProgressSlider);
 
             onCreated?.Invoke();
         }
 
         public void Cleanup() => ProgressUsers.Clear();
 
-        private void InitializeSelectCarLayoutGroup(GameObject rootUI, GameObject prefab, Color carSelectColor)
+        private void InitializeStartRaceComponents(GameObject rootUI)
         {
-            Transform carLayoutTransform = rootUI.GetComponentInChildren<SelectCarLayoutParent>().transform;
             StartRacePanel = rootUI.GetComponentInChildren<StartRacePanel>();
-            List<SelectCarLayoutElement> elements = InstantiateCarLayoutElements<SelectCarLayoutElement>(
-                prefab, carLayoutTransform, _staticData.GetCars());
-            SelectCarLayoutGroup = new SelectCarLayoutGroup(elements, StartRacePanel, carSelectColor);
+            StartRaceCountdown = rootUI.GetComponentInChildren<StartRaceCountdown>();
+        }
+        
+        private void InitializeSelectHorseLayoutGroup(GameObject rootUI, GameObject prefab, Color selectColor)
+        {
+            Transform horseLayoutTransform = rootUI.GetComponentInChildren<SelectHorseLayoutParent>().transform;
+            List<SelectHorseLayoutElement> elements = InstantiateHorseLayoutElements<SelectHorseLayoutElement>(
+                prefab, horseLayoutTransform, _staticData.GetHorses());
+            SelectHorseLayoutGroup = new SelectHorseLayoutGroup(elements, StartRacePanel, selectColor);
         }
 
         private void InitializeBetPanel(GameObject rootUI, BetStaticData betData)
@@ -75,48 +83,48 @@ namespace BettingRace.Code.Services.Factories
             BetResultCalculator = new BetResultCalculator(AllServices.Container.Single<ISaveLoadService>(),
                 FinishRacePanel, betData);
             RegisterProgressUser(BetResultCalculator);
-            List<FinishCarElement> carElements = 
-                InstantiateCarLayoutElements<FinishCarElement>(prefab, FinishRacePanel.FinishedCarParent, _staticData.GetCars());
-            FinishedCarList = new FinishCarLayoutGroup(carElements, selectedColor);
+            List<FinishHorseElement> elements = 
+                InstantiateHorseLayoutElements<FinishHorseElement>(prefab, FinishRacePanel.FinishedHorseContent, _staticData.GetHorses());
+            FinishedHorseList = new FinishHorseLayoutGroup(elements, selectedColor);
         }
 
         private void InitializeRaceProgressSliders(GameObject rootUI, GameObject sliderPrefab)
         {
-            CarProgressSliders = rootUI.GetComponentInChildren<RaceProgressSliderGroup>();
-            CarProgressSliders.Hide();
-            InstantiateCarProgressSliders(sliderPrefab, CarProgressSliders.transform, CarProgressSliders.CarProgressSliders);
+            HorseProgressSliders = rootUI.GetComponentInChildren<RaceProgressSliderGroup>();
+            HorseProgressSliders.Hide();
+            InstantiateHorseProgressSliders(sliderPrefab, HorseProgressSliders.transform, HorseProgressSliders.HorseProgressSliders);
         }
 
         private void RegisterProgressUser(ISavedProgress progressWriter) =>
             ProgressUsers.Add(progressWriter);
 
-        private List<TElement> InstantiateCarLayoutElements<TElement>(GameObject prefab, Transform carLayoutTransform,
-            List<CarData> cars) where TElement : UI.ILayoutElement
+        private List<TElement> InstantiateHorseLayoutElements<TElement>(GameObject prefab, Transform horseLayoutTransform,
+            List<HorseData> horses) where TElement : UI.ILayoutElement
         {
-            List<TElement> carElements = new List<TElement>(4);
+            List<TElement> elements = new List<TElement>(4);
             
-            for (int i = 0; i < cars.Count; i++)
+            for (int i = 0; i < horses.Count; i++)
             {
-                GameObject car = Object.Instantiate(prefab, carLayoutTransform);
-                TElement layoutElement = car.GetComponent<TElement>();
-                layoutElement.Construct(cars[i].View, cars[i].Name, i);
-                carElements.Add(layoutElement);
+                GameObject horse = Object.Instantiate(prefab, horseLayoutTransform);
+                TElement layoutElement = horse.GetComponent<TElement>();
+                layoutElement.Construct(horses[i].View, horses[i].Name, i);
+                elements.Add(layoutElement);
             }
 
-            return carElements;
+            return elements;
         }
 
-        private void InstantiateCarProgressSliders(GameObject sliderPrefab, Transform parent, List<Slider> sliderList)
+        private void InstantiateHorseProgressSliders(GameObject sliderPrefab, Transform parent, List<Slider> sliderList)
         {
             PositionStaticData positionData = _staticData.GetPositionData();
             
-            foreach (CarData car in _staticData.GetCars())
+            foreach (HorseData horse in _staticData.GetHorses())
             {
-                Slider carSlider = Object.Instantiate(sliderPrefab, parent).GetComponent<Slider>();
-                carSlider.handleRect.GetComponent<Image>().color = car.SliderColor;
-                carSlider.minValue = positionData.CarSpawnPoint.x;
-                carSlider.maxValue = positionData.FinishDistance;
-                sliderList.Add(carSlider);
+                Slider horseProgressSlider = Object.Instantiate(sliderPrefab, parent).GetComponent<Slider>();
+                horseProgressSlider.handleRect.GetComponent<Image>().color = horse.SliderColor;
+                horseProgressSlider.minValue = positionData.HorseSpawnPoint.x;
+                horseProgressSlider.maxValue = positionData.FinishDistance;
+                sliderList.Add(horseProgressSlider);
             }
         }
     }

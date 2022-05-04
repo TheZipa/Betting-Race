@@ -8,7 +8,7 @@ namespace BettingRace.Code.UI.FinishRace
     public class FinishRacePanel : MonoBehaviour
     {
         public event Action OnNewRace;
-        public Transform FinishedCarParent;
+        public Transform FinishedHorseContent;
         
         [SerializeField] private TextMeshProUGUI _betResultText;
         [SerializeField] private Button _newRaceButton;

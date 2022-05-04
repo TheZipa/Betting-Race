@@ -6,9 +6,9 @@ namespace BettingRace.Code.Data.StaticData
     public class UIStaticData : ScriptableObject
     {
         public GameObject RootUIPrefab;
-        public GameObject SelectCarElement;
-        public GameObject FinishedCardElement;
-        public GameObject CarProgressSlider;
-        public Color CarSelectColor;
+        public GameObject SelectHorseElement;
+        public GameObject FinishedHorseElement;
+        public GameObject HorseProgressSlider;
+        public Color SelectColor;
     }
 }

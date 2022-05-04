@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using BettingRace.Code.Game.Car;
+using BettingRace.Code.Game.Horse;
 using BettingRace.Code.UI;
 using Cinemachine;
 using UnityEngine;
@@ -9,76 +9,76 @@ namespace BettingRace.Code.Game.Race
 {
     public class Race : IRace
     {
-        public event Action<int, int> OnCarFinished;
+        public event Action<int, int> OnHorseFinished;
         public event Action<bool> OnRaceEnded;
         
-        private readonly List<ICar> _cars;
-        private readonly List<ICar> _finishedCars = new List<ICar>(4);
+        private readonly List<IHorse> _horses;
+        private readonly List<IHorse> _finishedHorses = new List<IHorse>(4);
         private readonly CinemachineVirtualCamera _virtualCamera;
-        private readonly RaceProgressSliderGroup _carProgressSliders;
+        private readonly RaceProgressSliderGroup _horseProgressSliders;
 
-        private ICar _chosenCar;
+        private IHorse _chosenHorse;
 
-        public Race(List<ICar> cars, CinemachineVirtualCamera virtualCamera, RaceProgressSliderGroup carProgressSliders)
+        public Race(List<IHorse> horses, CinemachineVirtualCamera virtualCamera, RaceProgressSliderGroup horseProgressSliders)
         {
-            _cars = cars;
+            _horses = horses;
             _virtualCamera = virtualCamera;
-            _carProgressSliders = carProgressSliders;
+            _horseProgressSliders = horseProgressSliders;
 
-            SetChosenCar(0);
-            SubscribeCars();
+            SetChosenHorse(0);
+            SubscribeHorses();
         }
 
         public void StartRace()
         {
-            SetCameraFollow(_chosenCar.GetTransform());
-            _carProgressSliders.Show();
+            SetCameraFollow(_chosenHorse.GetTransform());
+            _horseProgressSliders.Show();
 
-            foreach (ICar car in _cars)
-                car.Start();
+            foreach (IHorse horse in _horses)
+                horse.Start();
         }
 
-        public void SetChosenCar(int carId) =>
-            _chosenCar = _cars[carId];
+        public void SetChosenHorse(int horseId) =>
+            _chosenHorse = _horses[horseId];
 
-        private void OnCarFinish(ICar finishedCar)
+        private void OnHorseFinish(IHorse finishedHorse)
         {
-            if(finishedCar.Id == _chosenCar.Id) SetCameraFollow(null);
-            _finishedCars.Add(finishedCar);
-            OnCarFinished?.Invoke(_finishedCars.Count, finishedCar.Id);
+            if(finishedHorse.Id == _chosenHorse.Id) SetCameraFollow(null);
+            _finishedHorses.Add(finishedHorse);
+            OnHorseFinished?.Invoke(_finishedHorses.Count, finishedHorse.Id);
 
             if (IsRaceEnded())
             {
-                _carProgressSliders.Hide();
+                _horseProgressSliders.Hide();
                 OnRaceEnded?.Invoke(IsWin());
             }
         }
         
-        private void SubscribeCars()
+        private void SubscribeHorses()
         {
-            foreach (ICar car in _cars)
+            foreach (IHorse horse in _horses)
             {
-                car.OnMoved += _carProgressSliders.RefreshSliderValue;
-                car.OnFinish += OnCarFinish;
+                horse.OnMoved += _horseProgressSliders.RefreshSliderValue;
+                horse.OnFinish += OnHorseFinish;
             }
         }
 
-        private void UnsubscribeCars()
+        private void UnsubscribeHorses()
         {
-            foreach (ICar car in _cars)
+            foreach (IHorse horse in _horses)
             {
-                car.OnMoved += _carProgressSliders.RefreshSliderValue;
-                car.OnFinish -= OnCarFinish;
+                horse.OnMoved += _horseProgressSliders.RefreshSliderValue;
+                horse.OnFinish -= OnHorseFinish;
             }
         }
         
-        private void SetCameraFollow(Transform car) =>
-            _virtualCamera.m_Follow = car;
+        private void SetCameraFollow(Transform horse) =>
+            _virtualCamera.m_Follow = horse;
 
-        private bool IsRaceEnded() => _finishedCars.Count == _cars.Count;
+        private bool IsRaceEnded() => _finishedHorses.Count == _horses.Count;
 
-        private bool IsWin() => _finishedCars[0].Id == _chosenCar.Id;
+        private bool IsWin() => _finishedHorses[0].Id == _chosenHorse.Id;
 
-        ~Race() => UnsubscribeCars();
+        ~Race() => UnsubscribeHorses();
     }
 }

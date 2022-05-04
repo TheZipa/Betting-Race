@@ -5,6 +5,6 @@ namespace BettingRace.Code.UI
     public interface ILayoutElement
     {
         int Id { get; }
-        void Construct(Sprite car, string name, int id);
+        void Construct(Sprite view, string name, int id);
     }
 }

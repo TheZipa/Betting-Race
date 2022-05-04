@@ -1,4 +1,3 @@
-using BettingRace.Code.Data;
 using BettingRace.Code.Infrastructure.DI;
 using BettingRace.Code.Services.Factories;
 using BettingRace.Code.Services.PersistentProgress;
@@ -10,23 +9,16 @@ namespace BettingRace.Code.Infrastructure.StateMachine.States
     public class BootstrapState : IState
     {
         private readonly GameStateMachine _stateMachine;
-        private readonly SceneLoader _sceneLoader;
-        //private readonly LoadingCurtain _loadingCurtain;
 
-        public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader)
+        public BootstrapState(GameStateMachine stateMachine)
         {
             _stateMachine = stateMachine;
-            _sceneLoader = sceneLoader;
-            //_loadingCurtain = loadingCurtain;
-            
+
             RegisterServices();
         }
 
-        public void Enter()
-        {
-            //_loadingCurtain.Show();
+        public void Enter() =>
             _stateMachine.Enter<LoadProgressState>();
-        }
 
         public void Exit()
         {
@@ -65,7 +57,6 @@ namespace BettingRace.Code.Infrastructure.StateMachine.States
 
         private void RegisterSaveLoad() =>
             AllServices.Container.RegisterSingle<ISaveLoadService>(new SaveLoadService(
-                AllServices.Container.Single<IPersistentProgressService>(), 
-                AllServices.Container.Single<IUIFactory>()));
+                AllServices.Container.Single<IPersistentProgressService>()));
     }
 }

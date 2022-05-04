@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using BettingRace.Code.Game.Car;
+using BettingRace.Code.Game.Horse;
 using BettingRace.Code.Game.Race;
 using BettingRace.Code.Infrastructure.DI;
 using BettingRace.Code.UI;
@@ -11,9 +11,9 @@ namespace BettingRace.Code.Services.Factories
     public interface IGameFactory : IService
     {
         CinemachineVirtualCamera VirtualCamera { get; }
-        List<ICar> Cars { get; }
+        List<IHorse> Horses { get; }
 
         void CreateGameComponents(Action onCreated = null);
-        IRace CreateRace(RaceProgressSliderGroup carProgressSliders);
+        IRace CreateRace(RaceProgressSliderGroup horseProgressSliders);
     }
 }

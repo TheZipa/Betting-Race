@@ -5,8 +5,8 @@ namespace BettingRace.Code.Game.Race
     public interface IRace
     {
         void StartRace();
-        void SetChosenCar(int carId);
+        void SetChosenHorse(int horseId);
         event Action<bool> OnRaceEnded;
-        event Action<int, int> OnCarFinished;
+        event Action<int, int> OnHorseFinished;
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using BettingRace.Code.Data;
 using BettingRace.Code.Services.SaveLoad;
-using UnityEngine;
 
 namespace BettingRace.Code.UI.Bet
 {
@@ -11,8 +10,7 @@ namespace BettingRace.Code.UI.Bet
     {
         public event Action<string, string> OnBetRefresh;
         public event Action<int> OnBetApprove;
-
-        private readonly CultureInfo _culture = new CultureInfo("ru-RU");
+        
         private readonly Stack<int> _betHistory = new Stack<int>();
         private readonly ISaveLoadService _saveLoadService;
         private readonly int _minBet;
@@ -59,8 +57,8 @@ namespace BettingRace.Code.UI.Bet
         public void RefreshBetView()
         {
             int balance = _playerBalance - _currentBet;
-            string balanceText = balance > 0 ? balance.ToString("#,#", _culture) : "0";
-            OnBetRefresh?.Invoke(balanceText, _currentBet.ToString("#,#", _culture));
+            string balanceText = balance > 0 ? balance.ToCultureString() : "0";
+            OnBetRefresh?.Invoke(balanceText, _currentBet.ToCultureString());
         }
 
         public void LoadProgress(PlayerProgress progress) =>

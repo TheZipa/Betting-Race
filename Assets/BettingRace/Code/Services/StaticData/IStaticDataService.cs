@@ -9,10 +9,10 @@ namespace BettingRace.Code.Services.StaticData
         void LoadStaticData();
 
         PositionStaticData GetPositionData();
-        CarMovementStaticData GetCarMovementData();
+        HorseMovementStaticData GetHorseMovementData();
         UIStaticData GetUIData();
         BetStaticData GetBetData();
 
-        List<CarData> GetCars();
+        List<HorseData> GetHorses();
     }
 }

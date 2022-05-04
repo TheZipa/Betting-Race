@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using BettingRace.Code.Data.Constants;
 using BettingRace.Code.Data.StaticData;
-using BettingRace.Code.Game.Car;
+using BettingRace.Code.Game.Horse;
 using BettingRace.Code.Game.Race;
 using BettingRace.Code.Services.StaticData;
 using BettingRace.Code.UI;
@@ -15,52 +15,52 @@ namespace BettingRace.Code.Services.Factories
     public class GameFactory : IGameFactory
     {
         public CinemachineVirtualCamera VirtualCamera { get; private set; }
-        public List<ICar> Cars { get; }
+        public List<IHorse> Horses { get; }
 
         private readonly IStaticDataService _staticData;
 
         public GameFactory(IStaticDataService staticData)
         {
             _staticData = staticData;
-            Cars = new List<ICar>(4);
+            Horses = new List<IHorse>(4);
         }
 
         public void CreateGameComponents(Action onCreated = null)
         {
-            CreateCars();
+            CreateHorses();
             CreateFollowCamera();
 
             onCreated?.Invoke();
         }
 
-        public IRace CreateRace(RaceProgressSliderGroup carProgressSliders) =>
-            new Race(Cars, VirtualCamera, carProgressSliders);
+        public IRace CreateRace(RaceProgressSliderGroup horseProgressSliders) =>
+            new Race(Horses, VirtualCamera, horseProgressSliders);
 
-        private void CreateCars()
+        private void CreateHorses()
         {
-            GameObject carPrefab = Resources.Load<GameObject>(PathConstants.CarPrefab);
+            GameObject horsePrefab = Resources.Load<GameObject>(PathConstants.HorsePrefab);
             PositionStaticData positionData = _staticData.GetPositionData();
-            CarMovementStaticData carMovementData = _staticData.GetCarMovementData();
-            List<CarData> carsData = _staticData.GetCars();
-            Cars.Clear();
-            Car.ResetId();
+            HorseMovementStaticData horseMovementData = _staticData.GetHorseMovementData();
+            List<HorseData> horsesData = _staticData.GetHorses();
+            Horses.Clear();
+            Horse.ResetId();
 
-            for(int i = 0; i < carsData.Count; i++)
+            for(int i = 0; i < horsesData.Count; i++)
             {
-                CarView carView = InstantiateCarView(i, carPrefab, positionData);
-                carView.SetCarSprite(carsData[i].View);
+                HorseView horseView = InstantiateHorseView(i, horsePrefab, positionData);
+                horseView.SetSprite(horsesData[i].View);
 
-                InitializeCar(carMovementData, carView, positionData.FinishDistance);
+                InitializeHorse(horseMovementData, horseView, positionData.FinishDistance);
             }
         }
 
-        private void InitializeCar(CarMovementStaticData carMovementData, CarView carView, float finishDistance)
+        private void InitializeHorse(HorseMovementStaticData horseMovementData, HorseView horseView, float finishDistance)
         {
-            ICarAccelerator accelerator =
-                new CarAccelerator(carMovementData.AccelerationCurve, carMovementData.AccelerationStep);
-            CarMovement carMovement = 
-                new CarMovement(carView, accelerator, carMovementData.MinSpeed, carMovementData.MaxSpeed, finishDistance);
-            Cars.Add(new Car(carMovement, carView));
+            IHorseAccelerator accelerator =
+                new HorseAccelerator(horseMovementData.AccelerationCurve, horseMovementData.AccelerationStep);
+            HorseMovement horseMovement = 
+                new HorseMovement(horseView, accelerator, horseMovementData.MinSpeed, horseMovementData.MaxSpeed, finishDistance);
+            Horses.Add(new Horse(horseMovement, horseView));
         }
 
         private void CreateFollowCamera()
@@ -70,18 +70,18 @@ namespace BettingRace.Code.Services.Factories
             VirtualCamera = camera.GetComponent<CinemachineVirtualCamera>();
         }
 
-        private CarView InstantiateCarView(int carIndex, GameObject carPrefab, PositionStaticData positionData)
+        private HorseView InstantiateHorseView(int index, GameObject horsePrefab, PositionStaticData positionData)
         {
-            Vector3 spawnPoint = GetSpawnPoint(carIndex, positionData);
-            GameObject car = Object.Instantiate(carPrefab, spawnPoint, Quaternion.identity);
-            CarView carView = car.GetComponent<CarView>();
-            return carView;
+            Vector3 spawnPoint = GetSpawnPoint(index, positionData);
+            GameObject horse = Object.Instantiate(horsePrefab, spawnPoint, Quaternion.identity);
+            HorseView horseView = horse.GetComponent<HorseView>();
+            return horseView;
         }
 
-        private Vector3 GetSpawnPoint(int carIndex, PositionStaticData positionData)
+        private Vector3 GetSpawnPoint(int index, PositionStaticData positionData)
         {
-            Vector3 spawnPoint = positionData.CarSpawnPoint;
-            spawnPoint.y = positionData.SpawnOffset * carIndex;
+            Vector3 spawnPoint = positionData.HorseSpawnPoint;
+            spawnPoint.y = positionData.SpawnOffset * index;
             return spawnPoint;
         }
     }

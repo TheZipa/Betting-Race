@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using BettingRace.Code.Data;
 using BettingRace.Code.Data.StaticData;
 using BettingRace.Code.Services.SaveLoad;
@@ -10,7 +9,6 @@ namespace BettingRace.Code.Game.BetResult
 {
     public class BetResultCalculator : IBetResultCalculator
     {
-        private readonly CultureInfo _culture = new CultureInfo("ru-RU");
         private readonly ISaveLoadService _saveLoadService;
         private readonly FinishRacePanel _finishPanel;
         private readonly Color _winTextColor;
@@ -49,7 +47,7 @@ namespace BettingRace.Code.Game.BetResult
         {
             string resultBet = String.Empty;
             resultBet += isWin ? Plus : Minus;
-            resultBet += _bet.ToString("#,#", _culture);
+            resultBet += _bet.ToCultureString();
             return resultBet;
         }
 
