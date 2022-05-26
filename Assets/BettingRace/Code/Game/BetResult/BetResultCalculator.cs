@@ -1,8 +1,8 @@
-using System;
-using System.Globalization;
 using BettingRace.Code.Data;
+using BettingRace.Code.Data.Sound;
 using BettingRace.Code.Data.StaticData;
 using BettingRace.Code.Services.SaveLoad;
+using BettingRace.Code.Services.Sound;
 using BettingRace.Code.UI.FinishRace;
 using UnityEngine;
 
@@ -10,8 +10,8 @@ namespace BettingRace.Code.Game.BetResult
 {
     public class BetResultCalculator : IBetResultCalculator
     {
-        private readonly CultureInfo _culture = new CultureInfo("ru-RU");
         private readonly ISaveLoadService _saveLoadService;
+        private readonly SoundService _soundService;
         private readonly FinishRacePanel _finishPanel;
         private readonly Color _winTextColor;
         private readonly Color _loseTextColor;
@@ -23,10 +23,11 @@ namespace BettingRace.Code.Game.BetResult
         private int _playerBalance;
         private int _bet;
 
-        public BetResultCalculator(ISaveLoadService saveLoadService, FinishRacePanel finishPanel, BetStaticData betData)
+        public BetResultCalculator(ISaveLoadService saveLoadService, SoundService soundService, FinishRacePanel finishPanel, BetStaticData betData)
         {
             _saveLoadService = saveLoadService;
             _finishPanel = finishPanel;
+            _soundService = soundService;
 
             _winTextColor = betData.WinTextColor;
             _loseTextColor = betData.LoseTextColor;
@@ -37,35 +38,23 @@ namespace BettingRace.Code.Game.BetResult
 
         public void CalculateBetResult(bool isWin)
         {
-            UpdatePlayerBalance(isWin);
-            string resultBet = GetBetResultString(isWin);
-            Color resultColor = isWin ? _winTextColor : _loseTextColor;
-            
-            _finishPanel.SetBetResultText(resultBet, resultColor);
-            _finishPanel.Show();
-        }
-
-        private string GetBetResultString(bool isWin)
-        {
-            string resultBet = String.Empty;
-            resultBet += isWin ? Plus : Minus;
-            resultBet += _bet.ToString("#,#", _culture);
-            return resultBet;
-        }
-
-        private void UpdatePlayerBalance(bool isWin)
-        {
+            SoundType resultSound;
             if (isWin)
             {
-                _bet *= _betFactor;
-                _playerBalance += _bet;
+                MultiplyPlayerBalance();
+                SetWinBetText();
+                resultSound = SoundType.Win;
             }
             else
             {
-                _playerBalance -= _bet;
+                MinusPlayerBalance();
+                SetLoseBetText();
+                resultSound = SoundType.Lose;
             }
-            
+
+            _soundService.PlaySound(resultSound);
             _saveLoadService.SaveProgress(this);
+            _finishPanel.Show();
         }
 
         public void LoadProgress(PlayerProgress progress) =>
@@ -73,5 +62,25 @@ namespace BettingRace.Code.Game.BetResult
 
         public void UpdateProgress(PlayerProgress progress) =>
             progress.Balance = _playerBalance;
+
+        private void SetWinBetText()
+        {
+            string winBet = Plus + _bet.ToCultureString();
+            _finishPanel.SetBetResultText(winBet, _winTextColor);
+        }
+
+        private void SetLoseBetText()
+        {
+            string loseBet = Minus + _bet.ToCultureString();
+            _finishPanel.SetBetResultText(loseBet, _loseTextColor);
+        }
+
+        private void MultiplyPlayerBalance()
+        {
+            _bet *= _betFactor;
+            _playerBalance += _bet;
+        }
+
+        private void MinusPlayerBalance() => _playerBalance -= _bet;
     }
 }

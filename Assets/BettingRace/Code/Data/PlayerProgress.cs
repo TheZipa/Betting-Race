@@ -6,8 +6,12 @@ namespace BettingRace.Code.Data
     public class PlayerProgress
     {
         public int Balance;
+        public bool SoundEnabled;
 
-        public PlayerProgress(int balance) =>
+        public PlayerProgress(int balance)
+        {
             Balance = balance;
+            SoundEnabled = true;
+        }
     }
 }

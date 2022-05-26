@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using BettingRace.Code.Infrastructure.DI;
 using BettingRace.Code.Infrastructure.StateMachine.States;
-using BettingRace.Code.Services.Factories;
+using BettingRace.Code.Services.Factories.GameFactory;
+using BettingRace.Code.Services.Factories.UIFactory;
 using BettingRace.Code.Services.PersistentProgress;
 using BettingRace.Code.Services.SaveLoad;
+using BettingRace.Code.Services.Sound;
 
 namespace BettingRace.Code.Infrastructure.StateMachine
 {
@@ -13,11 +15,11 @@ namespace BettingRace.Code.Infrastructure.StateMachine
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _activeState;
 
-        public GameStateMachine(SceneLoader sceneLoader)
+        public GameStateMachine(SceneLoader sceneLoader, SoundService soundService)
         {
             _states = new Dictionary<Type, IExitableState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
+                [typeof(BootstrapState)] = new BootstrapState(this, soundService),
                 [typeof(LoadProgressState)] = new LoadProgressState(this,
                         AllServices.Container.Single<IPersistentProgressService>(), 
                         AllServices.Container.Single<ISaveLoadService>()),
@@ -46,5 +48,7 @@ namespace BettingRace.Code.Infrastructure.StateMachine
             _activeState = state;
             return state;
         }
+
+        ~GameStateMachine() => _activeState.Exit();
     }
 }

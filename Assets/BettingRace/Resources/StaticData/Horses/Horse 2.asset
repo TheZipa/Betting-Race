@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be63bdd7e4b845be8e823508b217d82a, type: 3}
+  m_Name: Horse 2
+  m_EditorClassIdentifier: 
+  View: {fileID: 21300000, guid: 3212923df684a48e58f2aabca350f3ab, type: 3}
+  AnimationOverride: {fileID: 22100000, guid: 41964094a8ddc4311a04a2b559386572, type: 2}
+  SliderColor: {r: 0.7621654, g: 0.2941177, b: 0.90588236, a: 1}
+  Name: Horse 2

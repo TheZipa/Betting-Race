@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada2a379476543fdb26dc51a3be9dd3c, type: 3}
   m_Name: Position Data
   m_EditorClassIdentifier: 
-  CarSpawnPoint: {x: -5, y: 0, z: 0}
+  HorseSpawnPoint: {x: -5, y: -0.35, z: 0}
   FinishDistance: 300
-  SpawnOffset: -0.6
+  SpawnOffset: 0.775

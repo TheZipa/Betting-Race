@@ -6,7 +6,7 @@ namespace BettingRace.Code.Services.SaveLoad
 {
     public interface ISaveLoadService : IService
     {
-        void SaveProgress(ISavedProgress progressWriter);
+        void SaveProgress(ISaveLoadProgress progressWriter);
         PlayerProgress LoadProgress();
     }
 }

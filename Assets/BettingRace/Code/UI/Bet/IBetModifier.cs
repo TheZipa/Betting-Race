@@ -3,7 +3,7 @@ using BettingRace.Code.Services.PersistentProgress;
 
 namespace BettingRace.Code.UI.Bet
 {
-    public interface IBetModifier : ISavedProgress
+    public interface IBetModifier : ISaveLoadProgress
     {
         event Action<string, string> OnBetRefresh;
         event Action<int> OnBetApprove;

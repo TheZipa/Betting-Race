@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: UI Data
   m_EditorClassIdentifier: 
   RootUIPrefab: {fileID: 5683002247851552336, guid: db3ea42bd1ccc437e9d3d59c9f0580d0, type: 3}
-  SelectCarElement: {fileID: 3332277291536437901, guid: 323a9d34c5b0c49c59c4bc1b2a394de4, type: 3}
-  FinishedCardElement: {fileID: 1642248928488621195, guid: 12b2218ce4376449c88950430a569a48, type: 3}
-  CarProgressSlider: {fileID: 4764772494773315340, guid: aff2155884aee47cd8dd9bd2f750767f, type: 3}
-  CarSelectColor: {r: 1, g: 0.7636688, b: 0.3066038, a: 1}
+  SelectHorseElement: {fileID: 3332277291536437901, guid: 323a9d34c5b0c49c59c4bc1b2a394de4, type: 3}
+  FinishedHorseElement: {fileID: 1642248928488621195, guid: 12b2218ce4376449c88950430a569a48, type: 3}
+  HorseProgressSlider: {fileID: 4764772494773315340, guid: aff2155884aee47cd8dd9bd2f750767f, type: 3}
+  BetSelectedSprite: {fileID: 21300000, guid: ff2f874ef0607465d905b9091ce7eab6, type: 3}
+  FinishSelectedSprite: {fileID: 21300000, guid: f96bfee6e6e8d4b358b93f724f7c101b, type: 3}

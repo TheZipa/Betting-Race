@@ -7,10 +7,10 @@ namespace BettingRace.Code.UI
     public class RaceProgressSliderGroup : MonoBehaviour
     {
         [HideInInspector]
-        public List<Slider> CarProgressSliders = new List<Slider>(4);
+        public List<Slider> HorseProgressSliders = new List<Slider>(4);
 
         public void RefreshSliderValue(float position, int id) =>
-            CarProgressSliders[id - 1].value = position;
+            HorseProgressSliders[id - 1].value = position;
 
         public void Hide() => gameObject.SetActive(false);
 

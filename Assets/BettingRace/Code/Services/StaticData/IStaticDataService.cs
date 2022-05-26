@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using BettingRace.Code.Data.Sound;
 using BettingRace.Code.Data.StaticData;
 using BettingRace.Code.Infrastructure.DI;
+using UnityEngine;
 
 namespace BettingRace.Code.Services.StaticData
 {
@@ -9,10 +11,11 @@ namespace BettingRace.Code.Services.StaticData
         void LoadStaticData();
 
         PositionStaticData GetPositionData();
-        CarMovementStaticData GetCarMovementData();
+        HorseMovementStaticData GetHorseMovementData();
         UIStaticData GetUIData();
         BetStaticData GetBetData();
+        AudioClip GetSound(SoundType sound);
 
-        List<CarData> GetCars();
+        List<HorseData> GetHorses();
     }
 }

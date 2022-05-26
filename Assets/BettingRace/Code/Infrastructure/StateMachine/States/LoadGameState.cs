@@ -1,5 +1,7 @@
 using BettingRace.Code.Data;
 using BettingRace.Code.Services.Factories;
+using BettingRace.Code.Services.Factories.GameFactory;
+using BettingRace.Code.Services.Factories.UIFactory;
 using BettingRace.Code.Services.PersistentProgress;
 
 namespace BettingRace.Code.Infrastructure.StateMachine.States
@@ -39,7 +41,7 @@ namespace BettingRace.Code.Infrastructure.StateMachine.States
 
         private void InformProgress()
         {
-            foreach (ISavedProgress progressWriters in _uiFactory.ProgressUsers)
+            foreach (ISaveLoadProgress progressWriters in _uiFactory.ProgressUsers)
                 progressWriters.LoadProgress(_progressService.Progress);
         }
 
